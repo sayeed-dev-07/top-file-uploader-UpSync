@@ -5,6 +5,7 @@ const { PrismaClient } = require('./generated/prisma/client')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const express = require('express')
 const passport = require('passport')
+const path = require('node:path');
 
 const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
@@ -42,3 +43,22 @@ app.use(
 app.use(passport.session())
 app.use(express.urlencoded({ extended: false }));
 
+const port = process.env.PORT || 5001
+
+app.get('/', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.send('u are logged in')
+    } else {
+        res.send('not logged in')
+    }
+})
+app.get('/{*splat}', (req, res) => {
+    res.render('404')
+})
+
+app.listen(port, (error) => {
+    if (error) {
+        throw error;
+    }
+    console.log(`app listening on port ${port}!`);
+});

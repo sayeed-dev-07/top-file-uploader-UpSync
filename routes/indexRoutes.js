@@ -1,50 +1,38 @@
 const { Router } = require('express')
 const { isLoggedIn } = require('../middlewares/auth')
-const passport = require('passport')
 const indexRoutes = Router()
-const bcrypt = require('bcryptjs')
-const userQuery = require('../queries/user.queries')
-require('../middlewares/passport')
+const { signUpFormValidator } = require('../middlewares/formValidation')
+const indexControler = require('../controllers/indexControler')
+const { validationResult } = require('express-validator')
 
 
-
-indexRoutes.get('/', (req, res) => {
+indexRoutes.get('/', (req, res, next) => {
     if (req.isAuthenticated()) {
-        res.send(`you are logged in ${req.user.username}`)
-        console.log(req.user);
-    } else {
-        res.send('not logged in')
+        return res.redirect('/app')
     }
-})
+    next()
+},
+    indexControler.getHomePage)
+indexRoutes.get('/app', isLoggedIn, indexControler.getMainInterFace)
 
-indexRoutes.get('/login', (req, res) => {
-    res.render('login')
-})
+indexRoutes.get('/login', indexControler.getLogIn)
 indexRoutes.post('/login', (req, res, next) => {
     next()
 },
-    passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/login",
-        failureMessage: true,
-    })
+    indexControler.postLogIn
 )
-indexRoutes.get('/signup', (req, res, next) => {
-    res.render('signup')
-})
-indexRoutes.post('/signup', async (req, res, next) => {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10)
-    await userQuery.createUser(username, hashedPassword)
-    res.redirect('/login')
-})
-indexRoutes.get('/logout', isLoggedIn, (req, res, next) => {
-    req.logout((err) => {
-        if (err) {
-            return next(err);
-        }
-        res.redirect("/");
-    });
-})
+indexRoutes.get('/signup', indexControler.getSignUp)
+indexRoutes.post('/signup', signUpFormValidator, (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const userData = req.body;
+        return res.status(400).render('signup', {
+            prevData: userData,
+            err: errors.mapped()
+        })
+    }
+    next()
+}, indexControler.postSignUp)
+indexRoutes.get('/logout', isLoggedIn, indexControler.logOut)
 
 module.exports = { indexRoutes }

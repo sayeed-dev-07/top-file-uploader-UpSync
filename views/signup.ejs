@@ -11,13 +11,35 @@
     <form action="/signup" method="post">
         <div>
             <label for="username">Enter your username</label>
-            <input type="text" name="username" id="username">
+            <input required value="<%= locals.prevData?.username || '' %>" type="text" name="username" id="username">
         </div>
-        <div>
-            <label for="password">Enter your password</label>
-            <input type="password" name="password" id="password">
-        </div>
-        <button type="submit">sign up</button>
+        <% if (locals.err?.username) { %>
+            <div>
+                <p>
+                    <%= locals.err.username.msg %>
+                </p>
+            </div>
+            <% } %>
+                <% if (locals.uniqueNameError) { %>
+                    <div>
+                        <p>
+                            <%= locals.uniqueNameError %>
+                        </p>
+                    </div>
+                    <% } %>
+
+                        <div>
+                            <label for="password">Enter your password</label>
+                            <input required type="password" name="password" id="password">
+                        </div>
+                        <% if (locals.err?.password) { %>
+                            <div>
+                                <p>
+                                    <%= locals.err.password.msg %>
+                                </p>
+                            </div>
+                            <% } %>
+                                <button type="submit">sign up</button>
     </form>
 </body>
 

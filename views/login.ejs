@@ -11,11 +11,16 @@
     <form action="/login" method="post">
         <div>
             <label for="username">Enter your username</label>
-            <input type="text" id="username" name="username" placeholder="name">
+            <input required type="text" id="username" name="username" placeholder="name">
         </div>
         <div>
             <label for="password">Enter your password</label>
-            <input type="password" name="password" id="password">
+            <input required type="password" name="password" id="password">
+        </div>
+        <div>
+            <% if (locals.errorMessage) { %>
+                <%= locals.errorMessage %>
+                    <% } %>
         </div>
         <button type="submit">log in</button>
     </form>

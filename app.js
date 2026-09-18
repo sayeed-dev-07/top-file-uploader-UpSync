@@ -3,9 +3,10 @@ require('dotenv').config();
 const { PrismaPg } = require('@prisma/adapter-pg');
 const { PrismaClient } = require('./generated/prisma/client')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
+const { indexRoutes } = require('./routes/indexRoutes')
 const express = require('express')
-const passport = require('passport')
 const path = require('node:path');
+const passport = require('passport')
 
 const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
@@ -19,6 +20,7 @@ const assetsPath = path.join(__dirname, "public");
 app.use(express.static(assetsPath));
 app.use(express.urlencoded({ extended: true }));
 
+require('./middlewares/passport')
 
 
 app.use(
@@ -45,13 +47,11 @@ app.use(express.urlencoded({ extended: false }));
 
 const port = process.env.PORT || 5001
 
-app.get('/', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.send('u are logged in')
-    } else {
-        res.send('not logged in')
-    }
-})
+app.use('/', indexRoutes)
+
+
+
+
 app.get('/{*splat}', (req, res) => {
     res.render('404')
 })

@@ -1,10 +1,14 @@
 const { prisma } = require('../lib/prisma')
+const { hash } = require('bcryptjs')
+
+
 
 async function main() {
+    const passwordHash = await hash('664651', 10)
     await prisma.user.create({
         data: {
-            username: 'Sayeed',
-            password: '664651',
+            username: 'Sayeed2',
+            password: passwordHash,
             folders: {
                 create: {
                     name: "Images",

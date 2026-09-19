@@ -20,4 +20,38 @@ const isUniqueUser = async (name) => {
     return true
 }
 
-module.exports = { isUniqueUser, createUser }
+const createFolder = async (id, folderName) => {
+    await prisma.folder.create({
+        data: {
+            name: folderName,
+            userId: id
+        }
+    })
+}
+const addFiles = async (fileLink, id, fileType) => {
+    await prisma.file.create({
+        data: {
+            type: fileType,
+            link: fileLink,
+            folderId: id
+        }
+    })
+}
+const deleteFolder = async (id) => {
+    await prisma.folder.delete({
+        where: {
+            id: id
+        }
+    })
+}
+const deleteFile = async (id) => {
+    await prisma.file.delete({
+        where: {
+            id: id
+        }
+    })
+}
+
+
+
+module.exports = { isUniqueUser, createUser, createFolder, addFiles }

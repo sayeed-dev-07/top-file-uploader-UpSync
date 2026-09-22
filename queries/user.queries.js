@@ -36,6 +36,7 @@ const isUniqueFolder = async (name) => {
     return !existingFolder;
 }
 
+
 const createFolder = async (id, folderName) => {
     await prisma.folder.create({
         data: {
@@ -44,6 +45,18 @@ const createFolder = async (id, folderName) => {
         }
     })
 }
+
+const getFolderViaName = async (name) => {
+    return await prisma.folder.findFirst({
+        where: {
+            name: name
+        },
+        select: {
+            id: true
+        }
+    })
+}
+
 const addFiles = async (fileLink, id, fileType) => {
     await prisma.file.create({
         data: {
@@ -53,6 +66,17 @@ const addFiles = async (fileLink, id, fileType) => {
         }
     })
 }
+
+const getFilesByFolder = async (folderId) => {
+    const files = await prisma.file.findMany({
+        where: {
+            folderId: folderId
+        }
+    })
+    return files;
+}
+
+
 const deleteFolder = async (id) => {
     await prisma.folder.delete({
         where: {
@@ -77,4 +101,4 @@ const getAllFolderByUser = async (id) => {
 }
 
 
-module.exports = { isUniqueUser, createUser, createFolder, addFiles, deleteFile, deleteFolder, isUniqueFolder, getAllFolderByUser }
+module.exports = { isUniqueUser, createUser, createFolder, addFiles, deleteFile, deleteFolder, isUniqueFolder, getAllFolderByUser, getFilesByFolder, getFolderViaName }

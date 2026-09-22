@@ -8,7 +8,15 @@
 </head>
 
 <body>
-    here u will see the files
+    <p>Here you will see the files:</p>
+    <%- include('addfile') %>
+        <% if (locals.files && locals.files.length> 0) { %>
+            <% locals.files.forEach(function(file) { %>
+                <img src="<%= file.link %>" alt="Uploaded image">
+                <% }); %>
+                    <% } else { %>
+                        <p>No files available.</p>
+                        <% } %>
 </body>
 
 </html>

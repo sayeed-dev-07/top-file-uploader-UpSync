@@ -11,17 +11,35 @@ indexRoutes.get('/', (req, res, next) => {
         return res.redirect('/app')
     }
     next()
-},
-    indexControler.getHomePage)
+}, indexControler.getHomePage)
+
 indexRoutes.get('/app', isLoggedIn, indexControler.getMainInterFace)
 
-indexRoutes.get('/login', indexControler.getLogIn)
+indexRoutes.post('/app', indexControler.postFolder)
+
+
+
+
+indexRoutes.get('/login', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return res.redirect('/app')
+    }
+    next()
+}, indexControler.getLogIn)
+indexRoutes.get('/signup', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return res.redirect('/app')
+    }
+    next()
+}, indexControler.getSignUp)
+
+
+
 indexRoutes.post('/login', (req, res, next) => {
     next()
-},
-    indexControler.postLogIn
-)
-indexRoutes.get('/signup', indexControler.getSignUp)
+}, indexControler.postLogIn)
+
+
 indexRoutes.post('/signup', signUpFormValidator, (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

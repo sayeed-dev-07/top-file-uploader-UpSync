@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/app" method="post">
+        <label for="folderName">folder name</label>
+        <input type="text" id="folderName" name="folderName" required>
+        <button type="submit">new folder</button>
+    </form>
+
+
+    <% if (locals.error) { %>
+        <p style="color: red;">
+            <%= locals.error %>
+        </p>
+        <% } %>
+
+            <div>
+                hello this the home page after log in
+                <p>folders name</p>
+
+                <% if (locals.folders && locals.folders.length> 0) { %>
+                    <% locals.folders.forEach(folder=> { %>
+                        <p>
+                            <%= folder.name %>
+                        </p>
+                        <% }) %>
+                            <% } else { %>
+                                <p>No folder available</p>
+                                <% } %>
+            </div>
+</body>
+
+</html>

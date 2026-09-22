@@ -7,9 +7,36 @@ const getHomePage = (req, res) => {
     res.send('Home Page Where when ppl firstt comes')
 }
 
-const getMainInterFace = (req, res) => {
-    res.send(`Hello ${req.user.username} \n how are u??`)
+const getMainInterFace = async (req, res) => {
+    const folders = await userQuery.getAllFolderByUser(req.user.id)
+    res.render('app', {
+        folders
+    })
 }
+
+const postFolder = async (req, res, next) => {
+    try {
+        const name = req.body.folderName?.trim();
+
+        const isUnique = await userQuery.isUniqueFolder(name);
+
+        if (isUnique) {
+            await userQuery.createFolder(req.user.id, name);
+            return res.redirect('/app');
+        } else {
+            const folders = await userQuery.getAllFolderByUser(req.user.id);
+            return res.render('app', {
+                folders,
+                error: "A folder with that name already exists."
+            });
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+
 
 const getLogIn = (req, res) => {
     const messages = req.session.messages || [];
@@ -58,4 +85,6 @@ const logOut = async (req, res, next) => {
     });
 }
 
-module.exports = { getHomePage, getMainInterFace, getLogIn, getSignUp, postLogIn, postSignUp, logOut }
+
+
+module.exports = { getHomePage, getMainInterFace, getLogIn, getSignUp, postLogIn, postSignUp, logOut, postFolder }

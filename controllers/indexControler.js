@@ -35,6 +35,11 @@ const postFolder = async (req, res, next) => {
     }
 }
 
+const getFolderFiles = async (req, res, next) => {
+    res.render('files')
+}
+
+
 
 
 
@@ -87,4 +92,4 @@ const logOut = async (req, res, next) => {
 
 
 
-module.exports = { getHomePage, getMainInterFace, getLogIn, getSignUp, postLogIn, postSignUp, logOut, postFolder }
+module.exports = { getHomePage, getMainInterFace, getLogIn, getSignUp, postLogIn, postSignUp, logOut, postFolder, getFolderFiles }

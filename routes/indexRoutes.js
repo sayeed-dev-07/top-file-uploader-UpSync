@@ -17,6 +17,8 @@ indexRoutes.get('/app', isLoggedIn, indexControler.getMainInterFace)
 
 indexRoutes.post('/app', indexControler.postFolder)
 
+indexRoutes.get('/app/:folder', indexControler.getFolderFiles)
+
 
 
 
